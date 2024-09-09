@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Tracking System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://images.unsplash.com/photo-1570125909232-eb263c188f7e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        header {
+            background: rgba(0, 86, 179, 0.8);
+            color: #ffffff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #ffc107 3px solid;
+        }
+        header h1 {
+            margin: 0;
+            text-align: center;
+        }
+        .content {
+            background: rgba(255, 255, 255, 0.5);  /* Changed opacity to 0.5 */
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .button {
+            display: inline-block;
+            background: #ffc107;
+            color: #000000;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .button:hover {
+            background: #ffca2c;
+        }
+        #bus-status {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: rgba(233, 236, 239, 0.8);
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        @media(max-width: 768px) {
+            .container {
+                width: 95%;
+            }
+        }
+        .bus-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+            background-image: url('https://images.unsplash.com/photo-1570125909232-eb263c188f7e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+    </style>
+</head>
+<body>
+    <div class="bus-background"></div>
+    <header>
+        <div class="container">
+            <h1>Bus Tracking System</h1>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="content">
+            <h2>Bus Tracking System</h2>
+            <p>Get real-time updates on bus locations, find bus numbers, and locate nearest bus stops.</p>
+            
+            <div class="form-group">
+                <label for="from">From:</label>
+                <input type="text" id="from" placeholder="Enter starting point">
+            </div>
+            
+            <div class="form-group">
+                <label for="to">To:</label>
+                <input type="text" id="to" placeholder="Enter destination">
+            </div>
+            
+            <div class="button-group">
+                <a href="#" class="button" id="find-bus">Find Bus</a>
+            </div>
+            
+            <div id="bus-list" style="display: none;">
+                <h3>Available Buses:</h3>
+                <ul id="bus-options"></ul>
+            </div>
+            
+            <div class="button-group" style="display: none;" id="track-nearest-buttons">
+                <a href="#" class="button" id="track-bus">Track Selected Bus</a>
+                <a href="#" class="button" id="nearest-stop">Nearest Bus Stop</a>
+            </div>
+            
+            <div id="bus-status"></div>
+        </div>
+    </div>
+
+    <script>
+        const busStatus = document.getElementById('bus-status');
+        const from = document.getElementById('from');
+        const to = document.getElementById('to');
+        const busList = document.getElementById('bus-list');
+        const busOptions = document.getElementById('bus-options');
+        const trackNearestButtons = document.getElementById('track-nearest-buttons');
+        let selectedBus = null;
+
+        document.getElementById('find-bus').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (!from.value || !to.value) {
+                busStatus.innerHTML = 'Please enter both starting point and destination.';
+                return;
+            }
+            busStatus.innerHTML = 'Finding buses... Please wait.';
+            
+            // Simulating an API call to find bus numbers
+            setTimeout(function() {
+                const buses = ['KA31A1234', 'KA31A5678', 'KA31A9101'];
+                busOptions.innerHTML = '';
+                buses.forEach(bus => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<input type="radio" name="bus" value="${bus}"> ${bus}`;
+                    busOptions.appendChild(li);
+                });
+                busList.style.display = 'block';
+                trackNearestButtons.style.display = 'flex';
+                busStatus.innerHTML = `Buses available for route ${from.value} to ${to.value}`;
+            }, 2000);
+        });
+
+        document.getElementById('track-bus').addEventListener('click', function(e) {
+            e.preventDefault();
+            selectedBus = document.querySelector('input[name="bus"]:checked');
+            if (!selectedBus) {
+                busStatus.innerHTML = 'Please select a bus to track.';
+                return;
+            }
+            busStatus.innerHTML = 'Tracking bus... Please wait.';
+            
+            // Simulating a bus tracking API call
+            setTimeout(function() {
+                busStatus.innerHTML = `Bus ${selectedBus.value} is currently at Main St. and will arrive at your stop in approximately 10 minutes.`;
+            }, 2000);
+        });
+
+        document.getElementById('nearest-stop').addEventListener('click', function(e) {
+            e.preventDefault();
+            busStatus.innerHTML = 'Locating nearest bus stop... Please wait.';
+            
+            // Simulating an API call to find the nearest bus stop
+            setTimeout(function() {
+                busStatus.innerHTML = 'The nearest bus stop is "Central Station" located 0.3 miles from your current location.';
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
